@@ -22,7 +22,7 @@
         border-radius: 0.4rem;
         width: 100%;
         justify-content: center;
-        line-height: 4rem;
+        line-height: 5rem;
         font-weight: bold;
         font-size: 2rem;
         text-align: center;
@@ -131,17 +131,20 @@
         background-color: white;
         color: black;
         border-color: lightblue;
-        transition: transform 1s;
     }
     
     .reveal {
         transform: rotateX(180deg);
         transition: transform 0.6s;
-        transform-style: preserve-3d;
+        /* transform-style: preserve-3d; */
     }
     
     .letter-after {
-        transform: rotateX(180deg);
+        transform: rotateX(-180deg);
+        -webkit-transform: rotateX(-180deg);
+        -ms-transform: rotateX(-180deg);
+        -moz-transform: rotateX(-180deg);
+        -o-transform: rotateX(-180deg);
     }
     
     .reveal2 {
@@ -152,6 +155,10 @@
     
     .letter-after2 {
         transform: rotateX(180deg);
+        -webkit-transform: rotateX(180deg);
+        -ms-transform: rotateX(180deg);
+        -moz-transform: rotateX(180deg);
+        -o-transform: rotateX(180deg);
     }
     
     .game_box {
@@ -361,11 +368,10 @@
         margin: 0px;
     }
     
-    .help {
-        font-size: 16px;
-        height: 40px;
-        width: 40px;
-        line-height: 2rem;
+    .help.col {
+        height: 5rem;
+        width: 5rem;
+        line-height: 4.5rem;
     }
     
     .help_icon {
@@ -660,6 +666,7 @@
                     <div style="text-align:left; font-size: 12px;">
                         If a letter is gray, it's not in the word square.
                     </div>
+                    <br/>
                     <hr/>
                     <span style="font-size:18px;">Guess today's word square!</span><br/>
                     <span style="font-size:13px;">Created by bored engineer 😩 &nbsp;Aritra Nirmal</span><br/>
@@ -743,7 +750,6 @@
                 var item = document.getElementById(id);
                 if (!item.classList.contains("correct")) {
                     item.classList.remove("selected");
-                    item.classList.remove("check")
                 }
             })
         })
@@ -781,7 +787,6 @@
                 var item = document.getElementById(id);
                 if (!item.classList.contains("correct")) {
                     item.classList.remove("selected")
-                    item.classList.remove("check")
                 }
             })
         })
@@ -807,30 +812,30 @@
     }
 
     function setUserIndex(index) {
-        if (index > 16) {
+        if (index >= 17) {
             return;
         }
         user_index = index;
-        var i = 1;
-        while (i < 17) {
-            var id1 = "cell_" + i;
-            var item1 = document.getElementById(id1);
-            if (item1.classList.contains("check")) {
-                item1.classList.remove("check");
-            }
-            i += 1;
-        }
-        if (curType == 1) {
-            selectCol(curCol);
-        } else {
-            selectRows(curRow);
-        }
-        if (index > -1) {
-            var id = "cell_" + index;
-            var item = document.getElementById(id);
-            item.classList.remove("selected");
-            item.classList.add("check");
-        }
+        // var i = 1;
+        // while (i < 17) {
+        //     var id1 = "cell_" + i;
+        //     var item1 = document.getElementById(id1);
+        //     if (item1.classList.contains("check")) {
+        //         item1.classList.remove("check");
+        //     }
+        //     i += 1;
+        // }
+        // if (curType == 1) {
+        //     selectCol(curCol);
+        // } else {
+        //     selectRows(curRow);
+        // }
+        // if (index > -1) {
+        //     var id = "cell_" + index;
+        //     var item = document.getElementById(id);
+        //     item.classList.remove("selected");
+        //     item.classList.add("check");
+        // }
     }
 
     function addLetterByIndex(letter) {
@@ -839,7 +844,7 @@
         var done = false;
         user_index = user_index % tempSelect.length;
         tempSelect.forEach(element => {
-            if (parseInt(element) < user_index || done) {
+            if (parseInt(element) != user_index) {
                 return;
             }
             var id = "cell_" + element;
