@@ -278,7 +278,6 @@
     }
     
     #wordsquare {
-        position: relative;
         margin-top: 40px;
     }
     
@@ -858,7 +857,6 @@
         var tempSelect = [];
         tempSelect = tempSelect.concat(rows[1], rows[2], rows[3], rows[4]);
         var done = false;
-        user_index = user_index % tempSelect.length;
         tempSelect.forEach(element => {
             if (parseInt(element) != user_index) {
                 return;
@@ -951,14 +949,16 @@
                         res[counter % 4].push(1);
                         won -= 1;
                     } else {
-                        item.classList.remove("wrong");
-                        reveal("maybe", item);
+                        // item.classList.remove("wrong");
+                        reveal("normal", item);
+                        item.firstElementChild.innerText = "";
                         if (keyboard_key.dataset.state != "correct")
                             keyboard_key.dataset.state = "present";
                         res[counter % 4].push(2);
                     }
                 } else {
-                    reveal("wrong", item);
+                    reveal("normal", item);
+                    item.firstElementChild.innerText = "";
                     if (keyboard_key.dataset.state != "correct")
                         keyboard_key.dataset.state = "absent";
                     res[counter % 4].push(0);
