@@ -1095,19 +1095,24 @@
     wordSquares = [
         ["away", "were", "area", "year"],
         ["base", "away", "sale", "eyes"],
-        ["call", "area", "left", "late"],
         ["bill", "idea", "lead", "lady"],
-        ["away", "were", "area", "year"],
-        ["base", "away", "sale", "eyes"],
+        ["know", "none", "once", "week"],
+        ["what", "here", "area", "team"],
+        ["plus", "line", "unit", "sets"]
+
     ];
-    let startDate = new Date("03/27/2022");
+    let startDate = new Date("04/03/2022");
 
     function pickTodayAnswer() {
         var today = new Date();
-        var Difference_In_Time = today.getTime() - startDate.getTime();
         // To calculate the no. of days between two dates
-        var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
-        var index = Difference_In_Days % wordSquares.length;
+        const diffTime = Math.abs(startDate - today);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        var index = diffDays % wordSquares.length;
+        if (index > 0) {
+            index -= 1;
+        }
+        console.log(index, diffDays);
         answer = wordSquares[index];
         console.log(answer);
 
