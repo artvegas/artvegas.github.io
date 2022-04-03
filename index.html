@@ -1,816 +1,943 @@
 <html>
-    <head>
-        <title>Word Square</title>
-        <meta name="viewport" content="initial-scale=0.85, maximum-scale=1.0, user-scalable=no" />
-        <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/747/747552.png">
-        <!-- CSS only -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <!-- JavaScript Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Patua+One&display=swap" rel="stylesheet">
-    </head>
-    <style>
-        body{
-            padding:5px;
-        }
-        .cell {
-            border-style:solid;
-            border-color:lightgray;
-            border-width:0.2rem;
-            margin:4px;
-            border-radius: 0.4rem;
-            height:70px;
-            justify-content: center;
-            line-height: 4rem;
-            font-weight: bold;
-            font-size:3rem;
-            text-align: center;
-        }
 
-        .sm {
-            height:10px;
-            line-height: 0px;
-        }
-        .sm.col {
-            padding:0px;
-            margin:0px;
-        }
-        .row.attempt{
-            padding:0px;
-            margin:1px;
-        }
-        #attempts > .container{
-            width:20px;
-        }
-        .correct {
-            background-color:lightgreen;
-            border-color:darkgreen;
-            color:darkgreen;
-        }
-
-        .cell {
-            margin-bottom:0px;
-        }
-
-        .cell.maybe {
-            background-color: lightgoldenrodyellow;
-            border-color:darkgoldenrod;
-            color:darkgoldenrod;
-        }
-
-        .cell.wrong {
-            background-color: darkgray;
-            color:white;
-            border-color: rgb(125, 125, 125);
-        }
-
-        .check {
-            background-color: darkgray;
-            color:white;
-            border-color: rgb(125, 125, 125);
-            transition: transform 0.6s;
-        }
-        
-        .reveal {
-            transform: rotateX(180deg);
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .letter-after{
-            transform: rotateX(180deg);
-        }
-        
-        .reveal2 {
-            transform: rotateX(-180deg);
-            transition: transform 0.7s;
-            transform-style: preserve-3d;
-        }
-
-        .letter-after2{
-            transform: rotateX(180deg);
-        }
-        
-
-        .game_box {
-            width: 430px;
-            margin-left:auto;
-            margin-right:auto;
-        }
-        
-
-
-        :host {
-            height: var(--keyboard-height);
-        }
-        #keyboard {
-            margin: 0 8px;
-            user-select: none;
-        }
-        
-        .row {
-            display: flex;
-            width: 100%;
-            margin: 0 auto 8px;
-            /* https://stackoverflow.com/questions/46167604/ios-html-disable-double-tap-to-zoom */
-            touch-action: manipulation;
-        }
-        
-        button {
-            font-family: inherit;
-            font-weight: bold;
-            border: 0;
-            padding: 0;
-            margin: 0 6px 0 0;
-            height: 58px;
-            border-radius: 4px;
-            cursor: pointer;
-            user-select: none;
-            background-color: lightgray;
-            color: black;
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-transform: uppercase;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.3);
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button.fade {
-            transition: background-color 0.1s ease, color 0.1s ease;
-        }
-        
-        button:last-of-type {
-            margin: 0;
-        }
-        
-        .half {
-            flex: 0.5;
-        }
-        
-        .one {
-            flex: 1;
-        }
-
-        .one-and-a-half {
-            flex: 1.5;
-            font-size: 12px;
-        }
-        
-        .two {
-            flex: 2;
-        }
-
-        button[data-state='correct'] {
-            background-color: lightgreen;
-            color: darkgreen;
-        }
-
-        button[data-state='present'] {
-            background-color: lightgoldenrodyellow;
-            color: darkgoldenrod;
-        }
-
-        button[data-state='absent'] {
-            background-color: darkgray;
-            color: white;
-        }
-
-        .r {
-            text-align: center;
-            line-height: 4rem;
-        }
-
-        .rtext {
-            border-radius: 1rem;
-            border-style: solid;
-            border-width:0.2rem;
-            border-color:lavender;
-            padding:5px;
-        }
-        .rtext.correct {
-            border-color:darkgreen;
-        }
-        .rtext.select {
-            background-color: lightslategray;
-            color:white;
-            border-color:black;
-        }
-        .c {
-            text-align: center;
-            line-height: 2rem;
-        }
-        #wordsquare {
-            position: relative;
-            margin-top:40px;
-            left:-20px;
-        }
-        .selected {
-            border-color: rgb(78, 78, 78);
-        }
-        #wordsquare.shake {
-            animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-        #wordsquare.shake2 {
-            animation: shake2 0.82s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-        @keyframes shake {
-        10%, 90% {
+<head>
+    <title>Word Square</title>
+    <meta name="viewport" content="initial-scale=0.85, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/747/747552.png">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Patua+One&display=swap" rel="stylesheet">
+</head>
+<style>
+    .cell {
+        border-style: solid;
+        border-color: lightgray;
+        border-width: 0.2rem;
+        margin: 4px;
+        border-radius: 0.4rem;
+        height: 70px;
+        justify-content: center;
+        line-height: 4rem;
+        font-weight: bold;
+        font-size: 3rem;
+        text-align: center;
+    }
+    
+    .sm {
+        height: 10px;
+        line-height: 0px;
+    }
+    
+    .sm.col {
+        padding: 0px;
+        margin: 0px;
+    }
+    
+    .row.attempt {
+        padding: 0px;
+        margin: 1px;
+    }
+    
+    #attempts>.container {
+        width: 20px;
+    }
+    
+    .correct {
+        background-color: lightgreen;
+        border-color: darkgreen;
+        color: darkgreen;
+    }
+    
+    .cell {
+        margin-bottom: 0px;
+    }
+    
+    .cell.maybe {
+        background-color: lightgoldenrodyellow;
+        border-color: darkgoldenrod;
+        color: darkgoldenrod;
+    }
+    
+    .cell.wrong {
+        background-color: darkgray;
+        color: white;
+        border-color: rgb(125, 125, 125);
+    }
+    
+    .check {
+        background-color: darkgray;
+        color: white;
+        border-color: rgb(125, 125, 125);
+        transition: transform 0.6s;
+    }
+    
+    .reveal {
+        transform: rotateX(180deg);
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+    
+    .letter-after {
+        transform: rotateX(180deg);
+    }
+    
+    .reveal2 {
+        transform: rotateX(-180deg);
+        transition: transform 0.7s;
+        transform-style: preserve-3d;
+    }
+    
+    .letter-after2 {
+        transform: rotateX(180deg);
+    }
+    
+    .game_box {
+        width: 430px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+     :host {
+        height: var(--keyboard-height);
+    }
+    
+    #keyboard {
+        margin: 0 8px;
+        user-select: none;
+    }
+    
+    .row {
+        display: flex;
+        width: 100%;
+        margin: 0 auto 8px;
+        /* https://stackoverflow.com/questions/46167604/ios-html-disable-double-tap-to-zoom */
+        touch-action: manipulation;
+    }
+    
+    button {
+        font-family: inherit;
+        font-weight: bold;
+        border: 0;
+        padding: 0;
+        margin: 0 6px 0 0;
+        height: 58px;
+        border-radius: 4px;
+        cursor: pointer;
+        user-select: none;
+        background-color: lightgray;
+        color: black;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-transform: uppercase;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    button:focus {
+        outline: none;
+    }
+    
+    button.fade {
+        transition: background-color 0.1s ease, color 0.1s ease;
+    }
+    
+    button:last-of-type {
+        margin: 0;
+    }
+    
+    .half {
+        flex: 0.5;
+    }
+    
+    .one {
+        flex: 1;
+    }
+    
+    .one-and-a-half {
+        flex: 1.5;
+        font-size: 12px;
+    }
+    
+    .two {
+        flex: 2;
+    }
+    
+    button[data-state='correct'] {
+        background-color: lightgreen;
+        color: darkgreen;
+    }
+    
+    button[data-state='present'] {
+        background-color: lightgoldenrodyellow;
+        color: darkgoldenrod;
+    }
+    
+    button[data-state='absent'] {
+        background-color: darkgray;
+        color: white;
+    }
+    
+    .r {
+        text-align: center;
+        line-height: 4rem;
+    }
+    
+    .rtext {
+        border-radius: 1rem;
+        border-style: solid;
+        border-width: 0.2rem;
+        border-color: lavender;
+        padding: 5px;
+    }
+    
+    .rtext.correct {
+        border-color: darkgreen;
+    }
+    
+    .rtext.select {
+        background-color: lightslategray;
+        color: white;
+        border-color: black;
+    }
+    
+    .c {
+        text-align: center;
+        line-height: 2rem;
+    }
+    
+    #wordsquare {
+        position: relative;
+        margin-top: 40px;
+        left: -20px;
+    }
+    
+    .selected {
+        border-color: rgb(78, 78, 78);
+    }
+    
+    #wordsquare.shake {
+        animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+    
+    #wordsquare.shake2 {
+        animation: shake2 0.82s cubic-bezier(.36, .07, .19, .97) both;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+    
+    @keyframes shake {
+        10%,
+        90% {
             transform: translate3d(-1px, 0, 0);
         }
-        
-        20%, 80% {
+        20%,
+        80% {
             transform: translate3d(2px, 0, 0);
         }
-
-        30%, 50%, 70% {
+        30%,
+        50%,
+        70% {
             transform: translate3d(-4px, 0, 0);
         }
-
-        40%, 60% {
+        40%,
+        60% {
             transform: translate3d(4px, 0, 0);
         }
-        }
-
-        @keyframes shake2 {
-        10%, 90% {
+    }
+    
+    @keyframes shake2 {
+        10%,
+        90% {
             transform: translate3d(-1px, 0, 0);
         }
-        
-        20%, 80% {
+        20%,
+        80% {
             transform: translate3d(2px, 0, 0);
         }
-
-        30%, 50%, 70% {
+        30%,
+        50%,
+        70% {
             transform: translate3d(-4px, 0, 0);
         }
-
-        40%, 60% {
+        40%,
+        60% {
             transform: translate3d(4px, 0, 0);
         }
-        }
+    }
+    
+    .container-fluid {
+        text-align: center;
+        margin-bottom: auto;
+        margin-right: auto;
+    }
+    
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    .attempts_box {
+        min-width: 100px;
+    }
+    
+    #attempts_box {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    hr {
+        margin-top: 40px;
+        width: 100%;
+    }
+    
+    .help {
+        font-size: 16px;
+        height: 40px;
+        width: 40px;
+        line-height: 2rem;
+    }
+    
+    .help_icon {
+        position: fixed;
+        border-width: 2px;
+        border-color: black;
+        border-radius: 2px;
+        background-color: white;
+        width: 50px;
+        border-radius: 5px;
+    }
+</style>
 
-        .container-fluid{
-            text-align: center;
-            margin-bottom: auto;
-            margin-right:auto;
-        }
-        .title {
-            font-size:2rem;
-            font-weight: bold;
-        }
-        .attempts_box {
-            width:100px;
-        }
-        #attempts_box{
-            width:40%;
-            margin-left:auto;
-            margin-right:auto;
-        }
-        hr {
-            margin-top:40px;
-        }
-    </style>
-    <body>
-        <br/>
-        <div class="container">
-            <div class="row justify-content-md-center title" style="margin-top:-20px; font-family: 'Patua One', cursive;line-height: 3rem;">
-                <div class="col col-sm-2" style="text-align:cennter; padding-bottom:5px;font-size:2rem; border-color:black">WordSquare</div>
-                <hr/>
+<body>
+    <br/>
+    <div class="container" style="max-width:100%">
+        <div class="row justify-content-md-center title" style="margin-top:-20px; font-family: 'Patua One', cursive;line-height: 3rem;">
+            <div class="col col-1 col-sm-1">
+                <div class="help_icon" style="font-size:35px; text-align: center;" onclick="gameinfo()">
+                    ?
+                </div>
+            </div>
+            <div class="col-sm-11 col-lg-11" style="text-align:center; padding-bottom:5px;font-size:2rem; margin-left:-80px;border-color:black">WordSquare</div>
+            <hr/>
+        </div>
+    </div>
+    <div id="attempts_box" class="container">
+        <div id="attempts" class="row">
+
+        </div>
+    </div>
+    <div class="game_box">
+        <div id="wordsquare" class="container">
+            <div class="row justify-content-md-center">
+                <div class="r col">
+                    <span class=""></span>
+                </div>
+                <div class="c col" onclick="selectCol(1)">
+                    <span id="c1" class="rtext">C 1</span>
+                </div>
+                <div class="c col" onclick="selectCol(2)">
+                    <span id="c2" class="rtext">C 2</span>
+                </div>
+                <div class="c col" onclick="selectCol(3)">
+                    <span id="c3" class="rtext">C 3</span>
+                </div>
+                <div class="c col" onclick="selectCol(4)">
+                    <span id="c4" class="rtext">C 4</span>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="r col" onclick="selectRows(1)">
+                    <span id="r1" class="rtext">R 1</span>
+                </div>
+                <div id="cell_1" class="cell col">
+                    <div class=""></div>
+                </div>
+                <div id="cell_2" class="cell col">
+                    <div class=""></div>
+                </div>
+                <div id="cell_3" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_4" class="cell col">
+                    <div></div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="r col" onclick="selectRows(2)">
+                    <span id="r2" class="rtext">R 2</span>
+                </div>
+                <div id="cell_5" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_6" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_7" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_8" class="cell col">
+                    <div></div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="r col" onclick="selectRows(3)">
+                    <span id="r3" class="rtext">R 3</span>
+                </div>
+                <div id="cell_9" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_10" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_11" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_12" class="cell col">
+                    <div></div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="r col" onclick="selectRows(4)">
+                    <span id="r4" class="rtext">R 4</span>
+                </div>
+                <div id="cell_13" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_14" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_15" class="cell col">
+                    <div></div>
+                </div>
+                <div id="cell_16" class="cell col">
+                    <div></div>
+                </div>
             </div>
         </div>
-       <br/>
-       <div id="attempts_box" class="container">
-        <div style="font-size:20px; text-align: center;" onclick="gameinfo()">How to play</div>
-           <div id="attempts" class="row">
-               
-           </div>
-       </div>
-        <div class="game_box">
-            <div id="wordsquare" class="container">
-                <div class="row justify-content-md-center">
-                    <div class="r col">
-                        <span class=""></span>
-                    </div>
-                    <div class="c col" onclick="selectCol(1)">
-                        <span id="c1" class="rtext">C 1</span>
-                    </div>
-                    <div class="c col" onclick="selectCol(2)">
-                        <span id="c2" class="rtext">C 2</span>
-                    </div>
-                    <div class="c col" onclick="selectCol(3)">
-                        <span id="c3" class="rtext">C 3</span>
-                    </div>
-                    <div class="c col" onclick="selectCol(4)">
-                        <span id="c4" class="rtext">C 4</span>
-                    </div>
+        <br/>
+        <div class="container2">
+            <div id="keyboard">
+                <div class="row">
+                    <button data-key="q" onclick="addLetter('q')">q</button>
+                    <button data-key="w" onclick="addLetter('w')">w</button>
+                    <button data-key="e" onclick="addLetter('e')" data-state="" class="">e</button>
+                    <button data-key="r" onclick="addLetter('r')">r</button>
+                    <button data-key="t" onclick="addLetter('t')" data-state="" class="">t</button>
+                    <button data-key="y" onclick="addLetter('y')">y</button>
+                    <button data-key="u" onclick="addLetter('u')" data-state="" class="">u</button>
+                    <button data-key="i" onclick="addLetter('i')" data-state="" class="">i</button>
+                    <button data-key="o" onclick="addLetter('o')" data-state="" class="">o</button>
+                    <button data-key="p" onclick="addLetter('p')">p</button>
                 </div>
-                <div class="row justify-content-md-center">
-                    <div class="r col" onclick="selectRows(1)">
-                        <span id="r1" class="rtext">R 1</span>
-                    </div>
-                    <div id="cell_1" class="cell col">
-                        <div class=""></div>
-                    </div>
-                    <div id="cell_2" class="cell col">
-                        <div class=""></div>
-                    </div>
-                    <div id="cell_3" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_4" class="cell col">
-                        <div></div>
-                    </div>
+                <div class="row">
+                    <div class="spacer half"></div>
+                    <button data-key="a" onclick="addLetter('a')" data-state="" class="">a</button>
+                    <button data-key="s" onclick="addLetter('s')" data-state="" class="">s</button>
+                    <button data-key="d" onclick="addLetter('d')" data-state="" class="">d</button>
+                    <button data-key="f" onclick="addLetter('f')">f</button>
+                    <button data-key="g" onclick="addLetter('g')">g</button>
+                    <button data-key="h" onclick="addLetter('h')">h</button>
+                    <button data-key="j" onclick="addLetter('j')">j</button>
+                    <button data-key="k" onclick="addLetter('k')">k</button>
+                    <button data-key="l" onclick="addLetter('l')">l</button>
+                    <div class="spacer half"></div>
                 </div>
-                <div class="row justify-content-md-center">
-                    <div class="r col" onclick="selectRows(2)">
-                        <span id="r2" class="rtext">R 2</span>
-                    </div>
-                    <div id="cell_5" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_6" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_7" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_8" class="cell col">
-                        <div></div>
-                    </div>
+                <div class="row">
+                    <button data-key="↵" onclick="evaluateAnswer()" class="one-and-a-half">enter</button>
+                    <button data-key="z" onclick="addLetter('z')">z</button>
+                    <button data-key="x" onclick="addLetter('x')">x</button>
+                    <button data-key="c" onclick="addLetter('c')">c</button>
+                    <button data-key="v" onclick="addLetter('v')">v</button>
+                    <button data-key="b" onclick="addLetter('b')">b</button>
+                    <button data-key="n" onclick="addLetter('n')">n</button>
+                    <button data-key="m" onclick="addLetter('m')">m</button>
+                    <button data-key="←" class="one-and-a-half" onclick="removeLetter()">←</button>
                 </div>
-                <div class="row justify-content-md-center">
-                    <div class="r col" onclick="selectRows(3)">
-                        <span id="r3" class="rtext">R 3</span>
-                    </div>
-                    <div id="cell_9" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_10" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_11" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_12" class="cell col">
-                        <div></div>
-                    </div>
-                </div>
-                <div class="row justify-content-md-center">
-                    <div class="r col" onclick="selectRows(4)">
-                        <span id="r4" class="rtext">R 4</span>
-                    </div>
-                    <div id="cell_13" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_14" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_15" class="cell col">
-                        <div></div>
-                    </div>
-                    <div id="cell_16"class="cell col">
-                        <div></div>
-                    </div>
-                </div>
-              </div>
-              <br/>
-              <div class="container2">
-                <div id="keyboard">
-                    <div class="row">
-                        <button data-key="q" onclick="addLetter('q')">q</button>
-                        <button data-key="w" onclick="addLetter('w')">w</button>
-                        <button data-key="e" onclick="addLetter('e')" data-state="" class="">e</button>
-                        <button data-key="r" onclick="addLetter('r')">r</button>
-                        <button data-key="t" onclick="addLetter('t')" data-state="" class="">t</button>
-                        <button data-key="y" onclick="addLetter('y')" >y</button>
-                        <button data-key="u" onclick="addLetter('u')" data-state="" class="">u</button>
-                        <button data-key="i" onclick="addLetter('i')" data-state="" class="">i</button>
-                        <button data-key="o" onclick="addLetter('o')" data-state="" class="">o</button>
-                        <button data-key="p" onclick="addLetter('p')">p</button>
-                    </div>
-                    <div class="row">
-                        <div class="spacer half"></div>
-                        <button data-key="a" onclick="addLetter('a')" data-state="" class="">a</button>
-                        <button data-key="s" onclick="addLetter('s')" data-state="" class="">s</button>
-                        <button data-key="d" onclick="addLetter('d')" data-state="" class="">d</button>
-                        <button data-key="f" onclick="addLetter('f')">f</button>
-                        <button data-key="g" onclick="addLetter('g')">g</button>
-                        <button data-key="h" onclick="addLetter('h')">h</button>
-                        <button data-key="j" onclick="addLetter('j')">j</button>
-                        <button data-key="k" onclick="addLetter('k')">k</button>
-                        <button data-key="l" onclick="addLetter('l')">l</button>
-                        <div class="spacer half"></div>
-                    </div>
-                    <div class="row">
-                        <button data-key="↵" onclick="evaluateAnswer()" class="one-and-a-half">enter</button>
-                        <button data-key="z" onclick="addLetter('z')">z</button>
-                        <button data-key="x" onclick="addLetter('x')">x</button>
-                        <button data-key="c" onclick="addLetter('c')">c</button>
-                        <button data-key="v" onclick="addLetter('v')">v</button>
-                        <button data-key="b" onclick="addLetter('b')">b</button>
-                        <button data-key="n" onclick="addLetter('n')">n</button>
-                        <button data-key="m" onclick="addLetter('m')">m</button>
-                        <button data-key="←" class="one-and-a-half" onclick="removeLetter()">←</button>
-                    </div>
-                </div>
-              </div>
+            </div>
         </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="gameover" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content" style="font-size:24px; font-weight:bold; text-align:center">
-        <div class="modal-body">
-        <span style="font-size:50px;">Answer</span><br/>
-          <span id="today_answer">
-
-          </span>
-        </div>
-        <span style="font-size:30px;">See you tomorrow</span><br/>
-      </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="gameinfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content" style="font-size:16px; font-weight:bold; text-align:center">
-        <div class="modal-body">
-        <span style="font-size:50px;">How to play</span><br/>
-        A word square is a special type of acrostic. It consists of a set of words written out in a square grid, such that the same words can be read both horizontally and vertically. <br/><br/>
-        Here is an example word square: <br/>
-          T  R  A  P<br/>
-          R  O  M  E<br/>
-          A  M  E  N<br/>
-          P  E  N  T<br/>
+    <!-- Modal -->
+    <div class="modal fade" id="gameover" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="font-size:24px; text-align:center; font-weight:bold;">
+                <div class="modal-body">
+                    <div style="font-size:50px;">Answer</div><br/>
+                    <div id="today_answer"></div><br/>
+                    <div style="font-size:30px;">See you tomorrow</div><br/>
+                </div>
+            </div>
         </div>
-        <span style="font-size:30px;">Guess today's word square!</span><br/>
-        <span style="font-size:13px;">Created by bored engineer 😩 &nbsp;Aritra Nirmal</span><br/>
-      </div>
     </div>
-  </div>
-  <div class="modal fade" id="gamewon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content" style="font-size:16px; font-weight:bold; text-align:center">
-        <div class="modal-body">
-        <span style="font-size:50px;">Great job!</span><br/>
+
+    <div class="modal fade" id="gameinfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="font-size:14px; font-weight:bold;">
+                <div class="modal-body">
+                    <span style="font-size:30px;">How to play</span><br/> Every day there is a new word square. You have <b>four</b> attempts to complete the word square.<br/><br/> Here is an example word square: <br/> T R A P<br/> R O M E<br/> A M E
+                    N
+                    <br/> P E N T<br/>
+                    <br/>
+
+                    <div class="container" style="position:relative; left:-20px;">
+                        <div class="row justify-content-md-left">
+                            <div class="cell help col col-2 correct">
+                                <div>
+                                    S
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    E
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    A
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    T
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:left; font-size: 12px;">
+                        If a letter is green, it's in the right position.
+                    </div>
+                    <br/>
+                    <div class="container" style="position:relative; left:-20px;">
+                        <div class="row justify-content-md-left">
+                            <div class="cell help col col-2">
+                                <div>
+                                    W
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    E
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell maybe">
+                                <div>
+                                    A
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell maybe">
+                                <div>
+                                    R
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:left; font-size: 12px;">If a letter is yellow, it's somewhere in the word square.</div>
+                    <br/>
+                    <div class="container" style="position:relative; left:-20px;">
+                        <div class="row justify-content-md-left">
+                            <div class="cell help col col-2">
+                                <div>
+                                    T
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell wrong">
+                                <div>
+                                    Y
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    P
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    E
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:left; font-size: 12px;">
+                        If a letter is gray, it's not in the word square.
+                    </div>
+                    <hr/>
+                    <span style="font-size:18px;">Guess today's word square!</span><br/>
+                    <span style="font-size:13px;">Created by bored engineer 😩 &nbsp;Aritra Nirmal</span><br/>
+                </div>
+            </div>
         </div>
-        <span style="font-size:30px;">See you tomorrow</span><br/>
-      </div>
     </div>
-  </div>
-    </body>
+    <div class="modal fade" id="gamewon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="font-size:16px; font-weight:bold; text-align:center">
+                <div class="modal-body">
+                    <span style="font-size:50px;">Great job!</span><br/>
+                </div>
+                <span style="font-size:30px;">See you tomorrow</span><br/>
+            </div>
+        </div>
+    </div>
+</body>
 
-    <script>
-        const col1 = ["1", "5", "9", "13"];
-        const col2 = ["2", "6", "10", "14"];
-        const col3 = ["3", "7", "11", "15"];
-        const col4 = ["4", "8", "12", "16"];
+<script>
+    const col1 = ["1", "5", "9", "13"];
+    const col2 = ["2", "6", "10", "14"];
+    const col3 = ["3", "7", "11", "15"];
+    const col4 = ["4", "8", "12", "16"];
 
-        const row1 = ["1", "2", "3", "4"];
-        const row2 = ["5", "6", "7", "8"];
-        const row3 = ["9", "10", "11", "12"];
-        const row4 = ["13", "14", "15", "16"];
+    const row1 = ["1", "2", "3", "4"];
+    const row2 = ["5", "6", "7", "8"];
+    const row3 = ["9", "10", "11", "12"];
+    const row4 = ["13", "14", "15", "16"];
 
-        let curSelect = row1;
+    let curSelect = row1;
 
-        let columns = {
-                1: col1,
-                2: col2,
-                3: col3,
-                4: col4,
-        };
+    let columns = {
+        1: col1,
+        2: col2,
+        3: col3,
+        4: col4,
+    };
 
-        let rows = {
-            1: row1,
-            2: row2,
-            3: row3,
-            4: row4,
-        }
-        
-        function selectCol(col){
-            unselectCols();
-            unselectRBtns();
-            unselectCBtns();
-            document.getElementById("c" + col).classList.add("select");
-            columns[col].forEach(element => {
+    let rows = {
+        1: row1,
+        2: row2,
+        3: row3,
+        4: row4,
+    }
+
+    function selectCol(col) {
+        unselectCols();
+        unselectRBtns();
+        unselectCBtns();
+        document.getElementById("c" + col).classList.add("select");
+        columns[col].forEach(element => {
+            var id = "cell_" + element;
+            var item = document.getElementById(id);
+            if (!item.classList.contains("correct"))
+                item.classList.add("selected")
+        });
+        curSelect = columns[col];
+    }
+
+    function unselectCBtns() {
+        const btns = [1, 2, 3, 4];
+        btns.forEach(element => {
+            var id = "c" + element;
+            document.getElementById(id).classList.remove("select");
+        })
+    }
+
+    function unselectCols() {
+        const keys = Object.keys(columns);
+        keys.forEach(key => {
+            columns[key].forEach(element => {
                 var id = "cell_" + element;
                 var item = document.getElementById(id);
-                if(!item.classList.contains("correct"))
-                    item.classList.add("selected")
-            });
-            curSelect = columns[col];
-        }
-
-        function unselectCBtns() {
-            const btns = [1,2,3,4];
-            btns.forEach(element => {
-                var id = "c" + element;
-                document.getElementById(id).classList.remove("select");
+                if (!item.classList.contains("correct"))
+                    item.classList.remove("selected")
             })
-        }
+        })
+    }
 
-        function unselectCols() {
-            const keys = Object.keys(columns);
-            keys.forEach(key => {
-                columns[key].forEach(element => {
-                    var id = "cell_" + element;
-                    var item = document.getElementById(id);
-                    if(!item.classList.contains("correct"))
-                        item.classList.remove("selected")
-                })
-            })
-        }
+    function unselectRBtns() {
+        const btns = [1, 2, 3, 4];
+        btns.forEach(element => {
+            var id = "r" + element;
+            document.getElementById(id).classList.remove("select");
+        })
+    }
 
-        function unselectRBtns() {
-            const btns = [1,2,3,4];
-            btns.forEach(element => {
-                var id = "r" + element;
-                document.getElementById(id).classList.remove("select");
-            })
-        }
+    function selectRows(row) {
+        unselectRows();
+        unselectCBtns();
+        unselectRBtns();
+        document.getElementById("r" + row).classList.add("select");
+        rows[row].forEach(element => {
+            var id = "cell_" + element;
+            var item = document.getElementById(id);
+            if (!item.classList.contains("correct"))
+                item.classList.add("selected")
+        });
+        curSelect = rows[row];
+    }
 
-        function selectRows(row){
-            unselectRows();
-            unselectCBtns();
-            unselectRBtns();
-            document.getElementById("r" + row).classList.add("select");
-            rows[row].forEach(element => {
+    function unselectRows() {
+        const keys = Object.keys(rows);
+        keys.forEach(key => {
+            rows[key].forEach(element => {
                 var id = "cell_" + element;
                 var item = document.getElementById(id);
-                if(!item.classList.contains("correct"))
-                    item.classList.add("selected")
-            });
-            curSelect = rows[row];
-        }
-
-        function unselectRows() {
-            const keys = Object.keys(rows);
-            keys.forEach(key => {
-                rows[key].forEach(element => {
-                    var id = "cell_" + element;
-                    var item = document.getElementById(id);
-                    if(!item.classList.contains("correct"))
-                        item.classList.remove("selected")
-                })
+                if (!item.classList.contains("correct"))
+                    item.classList.remove("selected")
             })
-        }
+        })
+    }
 
-        function addLetter(letter){
-            var done = false;
-            curSelect.forEach(element => {
+    function addLetter(letter) {
+        var done = false;
+        curSelect.forEach(element => {
+            var id = "cell_" + element;
+            var item = document.getElementById(id);
+            if (!done && !item.classList.contains("block") && item.firstElementChild.innerText == "") {
+                item.firstElementChild.innerText = letter.toUpperCase();
+                done = true;
+            }
+        })
+    }
+
+    function removeLetter() {
+        var done = false;
+        curSelect.slice().reverse().forEach(element => {
+            var id = "cell_" + element;
+            var item = document.getElementById(id);
+            if (!done && !item.classList.contains("block") && item.firstElementChild.innerText != "") {
+                item.firstElementChild.innerText = "";
+                done = true;
+            }
+        })
+    }
+
+    function reveal(state, cell) {
+        cell.classList.add(state);
+        if (cell.classList.contains("reveal2")) {
+            cell.firstElementChild.classList.remove("letter-after2");
+            cell.classList.remove("reveal2");
+            cell.firstElementChild.classList.add("letter-after");
+            cell.classList.add("reveal");
+        } else {
+            cell.firstElementChild.classList.remove("letter-after");
+            cell.classList.remove("reveal");
+            cell.firstElementChild.classList.add("letter-after2");
+            cell.classList.add("reveal2");
+        }
+    }
+
+    function evaluateAnswer() {
+        if (winner) {
+            return;
+        }
+        if (attempts_left == 0) {
+            gameover();
+            return;
+        }
+        if (!checkAllFilled()) {
+            return;
+        }
+        var res = [
+            [],
+            [],
+            [],
+            []
+        ];
+        var won = 16;
+        var counter = -1;
+        const keys = Object.keys(rows);
+        var answerhash = answer.join("").toUpperCase();
+        keys.forEach(key => {
+            rows[key].forEach(element => {
+                counter++;
                 var id = "cell_" + element;
                 var item = document.getElementById(id);
-                if(!done && !item.classList.contains("block") && item.firstElementChild.innerText == ""){
-                    item.firstElementChild.innerText = letter.toUpperCase();
-                    done = true;
+                if (item.classList.contains("block")) {
+                    res[counter % 4].push(1);
+                    won -= 1;
+                    return;
                 }
-            })
-        }
-
-        function removeLetter(){
-            var done = false;
-            curSelect.slice().reverse().forEach(element => {
-                var id = "cell_" + element;
-                var item = document.getElementById(id);
-                if(!done && !item.classList.contains("block") && item.firstElementChild.innerText != ""){
-                    item.firstElementChild.innerText = "";
-                    done = true;
+                var letter = item.firstElementChild.innerText;
+                var keyboard_key = document.querySelector('[data-key="' + letter.toLowerCase() + '"]');
+                if (item.classList.contains("correct")) {
+                    return;
                 }
-            })
-        }
-
-        function reveal(state, cell){
-            cell.classList.add(state);
-            if(cell.classList.contains("reveal2")){
-                cell.firstElementChild.classList.remove("letter-after2");
-                cell.classList.remove("reveal2");
-                cell.firstElementChild.classList.add("letter-after");
-                cell.classList.add("reveal");
-            }else {
-                cell.firstElementChild.classList.remove("letter-after");
-                cell.classList.remove("reveal");
-                cell.firstElementChild.classList.add("letter-after2");
-                cell.classList.add("reveal2");
-            }
-        }
-
-        function evaluateAnswer() {
-            if (winner) {
-                return;
-            }
-            if(attempts_left == 0){
-                gameover();
-                return;
-            }
-            if (!checkAllFilled()){
-                return;
-            }
-            var res = [[],[], [], []];
-            var won = 16;
-            var counter = -1;
-            const keys = Object.keys(rows);
-            var answerhash = answer.join("").toUpperCase();
-            keys.forEach(key => {
-                rows[key].forEach(element => {
-                    counter++;
-                    var id = "cell_" + element;
-                    var item = document.getElementById(id);
-                    if(item.classList.contains("block")) {
+                if (letter != "" && answerhash.includes(letter)) {
+                    if (letter == answerhash[parseInt(element) - 1]) {
+                        item.classList.add("block");
+                        reveal("correct", item);
+                        item.classList.remove("maybe");
+                        item.classList.remove("wrong");
+                        if (keyboard_key.dataset.state != "correct")
+                            keyboard_key.dataset.state = "correct";
                         res[counter % 4].push(1);
                         won -= 1;
-                        return;
-                    }
-                    var letter = item.firstElementChild.innerText;
-                    var keyboard_key = document.querySelector('[data-key="' + letter.toLowerCase() + '"]');
-                    if(item.classList.contains("correct")){
-                        return;
-                    }
-                    if(letter != "" && answerhash.includes(letter)) {
-                        if(letter == answerhash[parseInt(element) - 1])
-                        { 
-                            item.classList.add("block");
-                            reveal("correct", item);
-                            item.classList.remove("maybe");
-                            item.classList.remove("wrong");
-                            if (keyboard_key.dataset.state != "correct")
-                                keyboard_key.dataset.state = "correct";
-                            res[counter % 4].push(1);
-                            won -= 1;
-                        } else {
-                            item.classList.remove("wrong");
-                            reveal("maybe", item);
-                            if (keyboard_key.dataset.state != "correct")
-                                keyboard_key.dataset.state = "present";
-                            res[counter % 4].push(2);
-                        }
-                    }else {
-                        reveal("wrong", item);
+                    } else {
+                        item.classList.remove("wrong");
+                        reveal("maybe", item);
                         if (keyboard_key.dataset.state != "correct")
-                            keyboard_key.dataset.state = "absent";
-                        res[counter % 4].push(0);
+                            keyboard_key.dataset.state = "present";
+                        res[counter % 4].push(2);
                     }
-                });
-            });
-            createAttempt(res);
-            attempts_left -= 1;
-            if(won == 0) {
-                gamewon();
-            }
-        }
-
-        function checkAllFilled() {
-            const keys = Object.keys(rows);
-            var filled = true;
-            keys.forEach(key => {
-                rows[key].forEach(element => {
-                    if (!filled) {
-                        return;
-                    }
-                    var id = "cell_" + element;
-                    var item = document.getElementById(id);
-                    if(item.innerText == "") {
-                        filled = false;
-                    }
-                })
-            })
-
-            if(!filled) {
-                var item = document.getElementById("wordsquare");
-                if(item.classList.contains("shake")) {
-                    item.classList.remove("shake");
-                    item.classList.add("shake2");
-                }else {
-                    item.classList.remove("shake2");
-                    item.classList.add("shake");
+                } else {
+                    reveal("wrong", item);
+                    if (keyboard_key.dataset.state != "correct")
+                        keyboard_key.dataset.state = "absent";
+                    res[counter % 4].push(0);
                 }
-            }
-
-            return filled;
-        }
-
-        document.addEventListener('keydown', userKeyPress);
-
-        function userKeyPress(event) {
-            if (event.keyCode == 13){
-                event.preventDefault();
-                evaluateAnswer();
-            }else if(event.keyCode == 46 || event.keyCode == 8){
-                removeLetter();
-            }else if(event.key.length == 1 && containsAnyLetter(event.key)){
-                addLetter(event.key);
-            }
-        }
-
-        function containsAnyLetter(str) {
-            return /[a-zA-Z]/.test(str);
-        }
-
-        function createAttempt(res) {
-            var container = document.createElement("div");
-            var col = document.createElement("div");
-            col.className = "col-sm";
-            container.className = "container attempts_box";
-            var createRow = function(arr) {
-                var row = document.createElement("div");
-                row.className = "attempt row justify-content-md-center";
-                arr.forEach(element=>{
-                    var col = document.createElement("div");
-                    col.className = "cell col sm";
-                    if(element == 1) {
-                        col.classList.add("correct");
-                    }
-                    if(element == 2) {
-                        col.classList.add("maybe");
-                    }
-                    if(element == 0) {
-                        col.classList.add("wrong");
-                    }
-                    row.appendChild(col);
-                });
-                container.appendChild(row);
-            };
-            res.forEach(result=> {
-                createRow(result);
             });
-            col.appendChild(container);
-            document.getElementById("attempts").appendChild(col);
+        });
+        createAttempt(res);
+        attempts_left -= 1;
+        if (won == 0) {
+            gamewon();
+        }
+    }
+
+    function checkAllFilled() {
+        const keys = Object.keys(rows);
+        var filled = true;
+        keys.forEach(key => {
+            rows[key].forEach(element => {
+                if (!filled) {
+                    return;
+                }
+                var id = "cell_" + element;
+                var item = document.getElementById(id);
+                if (item.innerText == "") {
+                    filled = false;
+                }
+            })
+        })
+
+        if (!filled) {
+            var item = document.getElementById("wordsquare");
+            if (item.classList.contains("shake")) {
+                item.classList.remove("shake");
+                item.classList.add("shake2");
+            } else {
+                item.classList.remove("shake2");
+                item.classList.add("shake");
+            }
         }
 
-        function gameover() {
-            addAnswer();
-            let myModal = new bootstrap.Modal(document.getElementById('gameover'), {});
-            myModal.show();
+        return filled;
+    }
+
+    document.addEventListener('keydown', userKeyPress);
+
+    function userKeyPress(event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            evaluateAnswer();
+        } else if (event.keyCode == 46 || event.keyCode == 8) {
+            removeLetter();
+        } else if (event.key.length == 1 && containsAnyLetter(event.key)) {
+            addLetter(event.key);
         }
+    }
 
-        function gameinfo() {
-            let myModal = new bootstrap.Modal(document.getElementById('gameinfo'), {});
-            myModal.show();
-        }
+    function containsAnyLetter(str) {
+        return /[a-zA-Z]/.test(str);
+    }
 
-        function gamewon() {
-            winner = true;
-            let myModal = new bootstrap.Modal(document.getElementById('gamewon'), {});
-            myModal.show();
-        }
-
-        let winner = false;
-        let attempts_left = 4;
-        // let res = [[1,0,0,2], [0,0,2,1], [1,2,1,1], [0,0,2,1]];
-        // createAttempt(res);
-        // createAttempt(res);
-        // createAttempt(res);
-        // createAttempt(res);
-        let answer = [];
-        wordSquares = [
-            ["away", "were", "area", "year"],
-            ["base", "away", "sale", "eyes"],
-            ["call", "area", "left", "late"],
-            ["bill", "idea", "lead", "lady"],
-            ["away", "were", "area", "year"],
-            ["base", "away", "sale", "eyes"],
-        ];
-        let startDate = new Date("04/01/2022");
-        function pickTodayAnswer(){
-            var today = new Date();
-            var Difference_In_Time = today.getTime() - startDate.getTime();
-            // To calculate the no. of days between two dates
-            var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
-            var index = Difference_In_Days % wordSquares.length;
-            answer = wordSquares[index];
-            // console.log(answer);
-
-        }
-
-        function addAnswer(){
-            var today_answer = document.getElementById("today_answer");
-            var str = "";
-            answer.forEach(ans=>{
-                ans.split("").forEach(l=>{
-                    console.log(l)
-                    str += l.toUpperCase();
-                    str += "&nbsp; &nbsp; ";
-                })
-                str += "<br/>";
+    function createAttempt(res) {
+        var container = document.createElement("div");
+        var col = document.createElement("div");
+        col.className = "col col-sm-3 col-3";
+        container.className = "container attempts_box";
+        var createRow = function(arr) {
+            var row = document.createElement("div");
+            row.className = "attempt row justify-content-md-center";
+            arr.forEach(element => {
+                var col = document.createElement("div");
+                col.className = "cell col col-sm-2 sm";
+                if (element == 1) {
+                    col.classList.add("correct");
+                }
+                if (element == 2) {
+                    col.classList.add("maybe");
+                }
+                if (element == 0) {
+                    col.classList.add("wrong");
+                }
+                row.appendChild(col);
             });
-            today_answer.innerHTML = str;
-        }
+            container.appendChild(row);
+        };
+        res.forEach(result => {
+            createRow(result);
+        });
+        col.appendChild(container);
+        document.getElementById("attempts").appendChild(col);
+    }
 
-        pickTodayAnswer();
-        gameinfo();
-        selectRows(1);
-    </script>
+    function gameover() {
+        addAnswer();
+        let myModal = new bootstrap.Modal(document.getElementById('gameover'), {});
+        myModal.show();
+    }
+
+    function gameinfo() {
+        let myModal = new bootstrap.Modal(document.getElementById('gameinfo'), {});
+        myModal.show();
+    }
+
+    function gamewon() {
+        winner = true;
+        let myModal = new bootstrap.Modal(document.getElementById('gamewon'), {});
+        myModal.show();
+    }
+
+    let winner = false;
+    let attempts_left = 4;
+    // let res = [
+    //     [1, 0, 0, 2],
+    //     [0, 0, 2, 1],
+    //     [1, 2, 1, 1],
+    //     [0, 0, 2, 1]
+    // ];
+    // createAttempt(res);
+    // createAttempt(res);
+    // createAttempt(res);
+    // createAttempt(res);
+    let answer = [];
+    wordSquares = [
+        ["away", "were", "area", "year"],
+        ["base", "away", "sale", "eyes"],
+        ["call", "area", "left", "late"],
+        ["bill", "idea", "lead", "lady"],
+        ["away", "were", "area", "year"],
+        ["base", "away", "sale", "eyes"],
+    ];
+    let startDate = new Date("04/01/2022");
+
+    function pickTodayAnswer() {
+        var today = new Date();
+        var Difference_In_Time = today.getTime() - startDate.getTime();
+        // To calculate the no. of days between two dates
+        var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+        var index = Difference_In_Days % wordSquares.length;
+        answer = wordSquares[index];
+        // console.log(answer);
+
+    }
+
+    function addAnswer() {
+        var today_answer = document.getElementById("today_answer");
+        var str = "";
+        answer.forEach(ans => {
+            ans.split("").forEach(l => {
+                console.log(l)
+                str += l.toUpperCase();
+                str += "&nbsp; &nbsp; ";
+            })
+            str += "<br/>";
+        });
+        today_answer.innerHTML = str;
+    }
+
+    pickTodayAnswer();
+    gameinfo();
+    selectRows(1);
+</script>
+
 </html>
