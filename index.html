@@ -83,7 +83,11 @@
     @media (max-height: 600px) {
         .cell {
             font-size: 1rem;
-            line-height: 2rem;
+            line-height: 1.6rem;
+        }
+        .letter-after,
+        .letter-after2 {
+            margin-left: -.3rem;
         }
         .col.cell,
         .col.r,
@@ -215,6 +219,12 @@
     
     button:last-of-type {
         margin: 0;
+    }
+    
+    .hidden {
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
     }
     
     .half {
@@ -407,6 +417,23 @@
             margin-left: 0px;
         }
     }
+    
+    #input_box {
+        border-style: none;
+        border-bottom-style: solid;
+        border-color: darkslategrey;
+        border-width: 2px;
+        border-radius: 0px;
+        font-size: 30px;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold
+    }
+    
+    .badge {
+        margin: 5px;
+        font-size: 20px;
+    }
 </style>
 
 <body>
@@ -415,18 +442,31 @@
         <div class="help_icon" style="font-size:35px; text-align: center;">
             <div onclick="gameinfo()">?</div>
         </div>
-        <div style="text-align:center; padding-bottom:5px;font-size:2rem; margin-left:-80px;border-color:black">WordSquare</div>
+        <div style="text-align:center; padding-bottom:5px;font-size:2rem; margin-left:-80px;border-color:black">
+            WordSquare
+            <div id="loading" class="spinner-border text-primary" style="margin-right:10px;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <hr/>
     </div>
     <br/>
-    <div id="attempts_box" class="container">
+    <div id="attempts_box" class="container" style="display:none">
         <div id="attempts" class="row justify-content-md-center ">
 
         </div>
     </div>
+    <div id="guess_box" class="container">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-5 col-sm-12 align-self-center">
+
+            </div>
+        </div>
+    </div>
+    <br/>
     <div class="game_box">
         <div id="wordsquare" class="container-md">
-            <div class="row  h-10 row-sm-1 justify-content-md-center">
+            <!-- <div class="row  h-10 row-sm-1 justify-content-md-center">
                 <div class="r col col-lg-1">
                     <span class=""></span>
                 </div>
@@ -442,78 +482,86 @@
                 <div class="c col col-lg-1" onclick="selectCol(4)">
                     <span id="c4" class="rtext">C 4</span>
                 </div>
-            </div>
+            </div> -->
             <div class="row h-10 justify-content-md-center">
-                <div class="r col col-lg-1" onclick="selectRows(1)">
+                <!-- <div class="r col col-lg-1" onclick="selectRows(1)">
                     <span id="r1" class="rtext">R 1</span>
-                </div>
+                </div> -->
                 <div id="cell_1" class="cell col col-lg-1" onclick="setUserIndex(1)">
-                    <div class=""></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_2" class="cell col col-lg-1" onclick="setUserIndex(2)">
-                    <div class=""></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_3" class="cell col col-lg-1" onclick="setUserIndex(3)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_4" class="cell col col-lg-1" onclick="setUserIndex(4)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
             </div>
             <div class="row h-10 justify-content-md-center">
-                <div class="r col col-lg-1" onclick="selectRows(2)">
+                <!-- <div class="r col col-lg-1" onclick="selectRows(2)">
                     <span id="r2" class="rtext">R 2</span>
-                </div>
+                </div> -->
                 <div id="cell_5" class="cell col col-lg-1 " onclick="setUserIndex(5)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_6" class="cell col col-lg-1 " onclick="setUserIndex(6)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_7" class="cell col col-lg-1" onclick="setUserIndex(7)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_8" class="cell col col-lg-1" onclick="setUserIndex(8)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
             </div>
             <div class="row h-10 justify-content-md-center">
-                <div class="r col col-lg-1" onclick="selectRows(3)">
+                <!-- <div class="r col col-lg-1" onclick="selectRows(3)">
                     <span id="r3" class="rtext">R 3</span>
-                </div>
+                </div> -->
                 <div id="cell_9" class="cell col col-lg-1" onclick="setUserIndex(9)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_10" class="cell col col-lg-1" onclick="setUserIndex(10)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_11" class="cell col col-lg-1" onclick="setUserIndex(11)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_12" class="cell col col-lg-1" onclick="setUserIndex(12)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
             </div>
             <div class="row  h-10 justify-content-md-center">
-                <div class="r col col-lg-1" onclick="selectRows(4)">
+                <!-- <div class="r col col-lg-1" onclick="selectRows(4)">
                     <span id="r4" class="rtext">R 4</span>
-                </div>
+                </div> -->
                 <div id="cell_13" class="cell col col-lg-1" onclick="setUserIndex(13)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_14" class="cell col col-lg-1" onclick="setUserIndex(14)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_15" class="cell col col-lg-1" onclick="setUserIndex(15)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
                 <div id="cell_16" class="cell col col-lg-1" onclick="setUserIndex(16)">
-                    <div></div>
+                    <div class="hidden"></div>
                 </div>
             </div>
         </div>
         <br/>
     </div>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-4 col-sm-12">
+                <input type="text" id="input_box" value="" placeholder="Type a word" class="form-control" id="input">
+            </div>
+        </div>
+    </div>
+    <br/>
     <div class="container2">
         <div class="container">
             <div class="row justify-content-md-center">
@@ -683,9 +731,9 @@
                     <span style="font-size:50px;">Great job 👏</span><br/>
                     <span style="font-size:20px;">See you tomorrow!</span><br/>
                 </div>
-                <div class="col">
+                <!-- <div class="col">
                     <button style="width:100px; height:50px; font-size:16px;" onclick="createShareResult()" class="btn btn-success">Share</button>
-                </div>
+                </div> -->
                 <br/>
             </div>
         </div>
@@ -715,6 +763,8 @@
     let curSelect = row1;
     let curRow = 1;
     let curCol = null;
+
+    let guesses = [];
 
     let columns = {
         1: col1,
@@ -807,23 +857,31 @@
         })
     }
 
+    let cur_word = "";
+
     function addLetter(letter) {
-        var done = false;
-        if (user_index == -1) {
-            curSelect.forEach(element => {
-                if (done) {
-                    return;
-                }
-                var id = "cell_" + element;
-                var item = document.getElementById(id);
-                if (!done && !item.classList.contains("block") && item.firstElementChild.innerText == "") {
-                    item.firstElementChild.innerText = letter.toUpperCase();
-                    done = true;
-                }
-            })
+        if (cur_word.length == 4) {
+            return;
         } else {
-            addLetterByIndex(letter);
+            cur_word += letter;
+            document.getElementById("input_box").value = cur_word;
         }
+        // var done = false;
+        // if (user_index == -1) {
+        //     curSelect.forEach(element => {
+        //         if (done) {
+        //             return;
+        //         }
+        //         var id = "cell_" + element;
+        //         var item = document.getElementById(id);
+        //         if (!done && !item.classList.contains("block") && item.firstElementChild.innerText == "") {
+        //             item.firstElementChild.innerText = letter.toUpperCase();
+        //             done = true;
+        //         }
+        //     })
+        // } else {
+        //     addLetterByIndex(letter);
+        // }
     }
 
     function setUserIndex(index) {
@@ -854,34 +912,41 @@
     }
 
     function addLetterByIndex(letter) {
-        var tempSelect = [];
-        tempSelect = tempSelect.concat(rows[1], rows[2], rows[3], rows[4]);
-        var done = false;
-        tempSelect.forEach(element => {
-            if (parseInt(element) != user_index) {
-                return;
-            }
-            var id = "cell_" + element;
-            var item = document.getElementById(id);
-            if (!done && !item.classList.contains("block")) {
-                item.firstElementChild.innerText = letter.toUpperCase();
-                // user_index += 1;
-                done = true;
-            }
-        })
-        setUserIndex(-1);
+        // var tempSelect = [];
+        // tempSelect = tempSelect.concat(rows[1], rows[2], rows[3], rows[4]);
+        // var done = false;
+        // tempSelect.forEach(element => {
+        //     if (parseInt(element) != user_index) {
+        //         return;
+        //     }
+        //     var id = "cell_" + element;
+        //     var item = document.getElementById(id);
+        //     if (!done && !item.classList.contains("block")) {
+        //         item.firstElementChild.innerText = letter.toUpperCase();
+        //         // user_index += 1;
+        //         done = true;
+        //     }
+        // })
+        // setUserIndex(-1);
     }
 
     function removeLetter() {
-        var done = false;
-        curSelect.slice().reverse().forEach(element => {
-            var id = "cell_" + element;
-            var item = document.getElementById(id);
-            if (!done && !item.classList.contains("block") && item.firstElementChild.innerText != "") {
-                item.firstElementChild.innerText = "";
-                done = true;
-            }
-        })
+        // var done = false;
+        // curSelect.slice().reverse().forEach(element => {
+        //     var id = "cell_" + element;
+        //     var item = document.getElementById(id);
+        //     if (!done && !item.classList.contains("block") && item.firstElementChild.innerText != "") {
+        //         item.firstElementChild.innerText = "";
+        //         done = true;
+        //     }
+        // })
+        if (cur_word.length == 0) {
+            cur_word = "";
+            return;
+        } else {
+            cur_word = cur_word.slice(0, -1);
+            document.getElementById("input_box").value = cur_word;
+        }
     }
 
     function reveal(state, cell) {
@@ -901,7 +966,32 @@
 
     let all_res = [];
 
+    function addGuess(word, skip) {
+        if (!skip) {
+            guesses.push(cur_word);
+        }
+        var guess_box = document.getElementById("guess_box");
+        var guess = document.createElement("span");
+        guess.className = "badge bg-light text-dark";
+        guess.innerText = word.toUpperCase();
+        guess_box.firstElementChild.firstElementChild.appendChild(guess);
+        //document.getElementById("input_box").value = "";
+        cur_word = "";
+        document.getElementById("input_box").value = cur_word;
+    }
+
     function evaluateAnswer() {
+        if (cur_word.length != 4 || guesses.includes(cur_word)) {
+            var item = document.getElementById("wordsquare");
+            if (item.classList.contains("shake")) {
+                item.classList.remove("shake");
+                item.classList.add("shake2");
+            } else {
+                item.classList.remove("shake2");
+                item.classList.add("shake");
+            }
+            return;
+        }
         if (winner) {
             gamewon();
             return;
@@ -910,9 +1000,9 @@
             gameover();
             return;
         }
-        if (!checkAllFilled()) {
-            return;
-        }
+        // if (!checkAllFilled()) {
+        //     return;
+        // }
         var res = [
             [],
             [],
@@ -923,10 +1013,12 @@
         var counter = -1;
         const keys = Object.keys(rows);
         var answerhash = answer.join("").toUpperCase();
+        var found = false;
         keys.forEach(key => {
             rows[key].forEach(element => {
                 counter++;
                 var id = "cell_" + element;
+                var index = (parseInt(element) - 1) % 4;
                 var item = document.getElementById(id);
                 if (item.classList.contains("block")) {
                     res[counter % 4].push(1);
@@ -938,36 +1030,57 @@
                 if (item.classList.contains("correct")) {
                     return;
                 }
-                if (letter != "" && answerhash.includes(letter)) {
-                    if (letter == answerhash[parseInt(element) - 1]) {
-                        item.classList.add("block");
-                        reveal("correct", item);
-                        item.classList.remove("maybe");
-                        item.classList.remove("wrong");
-                        if (keyboard_key.dataset.state != "correct")
-                            keyboard_key.dataset.state = "correct";
-                        res[counter % 4].push(1);
-                        won -= 1;
-                    } else {
-                        // item.classList.remove("wrong");
-                        reveal("normal", item);
-                        item.firstElementChild.innerText = "";
-                        if (keyboard_key.dataset.state != "correct")
-                            keyboard_key.dataset.state = "present";
-                        res[counter % 4].push(2);
-                    }
-                } else {
-                    reveal("normal", item);
-                    item.firstElementChild.innerText = "";
+                var el_id = element + "";
+                var checkCol = columns[cur_correct + 1];
+                var checkRow = rows[cur_correct + 1];
+                if (cur_word[index].toUpperCase() == letter) {
+                    // if (letter == answerhash[parseInt(element) - 1]) {
+                    //     item.classList.add("block");
+                    //     reveal("correct", item);
+                    //     item.classList.remove("maybe");
+                    //     item.classList.remove("wrong");
+                    //     if (keyboard_key.dataset.state != "correct")
+                    //         keyboard_key.dataset.state = "correct";
+                    //     res[counter % 4].push(1);
+                    //     won -= 1;
+                    // } else {
+                    //     // item.classList.remove("wrong");
+                    //     reveal("normal", item);
+                    //     item.firstElementChild.innerText = "";
+                    //     if (keyboard_key.dataset.state != "correct")
+                    //         keyboard_key.dataset.state = "present";
+                    //     res[counter % 4].push(2);
+                    // }
+                    item.classList.add("block");
+                    item.firstElementChild.classList.remove("hidden");
+                    reveal("correct", item);
+                    item.classList.remove("maybe");
+                    item.classList.remove("wrong");
+                    item.classList.add("correct");
+                    if (keyboard_key.dataset.state != "correct")
+                        keyboard_key.dataset.state = "correct";
+                    res[counter % 4].push(1);
+                    won -= 1;
+                    found = true;
+                }
+                if (cur_word.toUpperCase().includes(letter)) {
                     if (keyboard_key.dataset.state != "correct")
                         keyboard_key.dataset.state = "absent";
-                    res[counter % 4].push(0);
                 }
+                // else {
+                //     reveal("normal", item);
+                //     // item.firstElementChild.innerText = "";
+                //     if (keyboard_key.dataset.state != "correct")
+                //         keyboard_key.dataset.state = "absent";
+                //     res[counter % 4].push(0);
+                // }
             });
         });
+        cur_correct += found;
         all_res.push(res);
-        createAttempt(res);
+        //createAttempt(res);
         attempts_left -= 1;
+        addGuess(cur_word, false);
         if (won == 0) {
             gamewon();
         }
@@ -1066,6 +1179,7 @@
         winner = true;
         let myModal = new bootstrap.Modal(document.getElementById('gamewon'), {});
         myModal.show();
+        saveUserData(true, guesses, Math.abs(16 - attempts_left));
     }
 
     function copydone() {
@@ -1075,7 +1189,8 @@
     }
 
     let winner = false;
-    let attempts_left = 4;
+    let attempts_left = 10;
+    let cur_correct = 0;
     // let res = [
     //     [1, 0, 0, 2],
     //     [0, 0, 2, 1],
@@ -1096,8 +1211,12 @@
         ["base", "away", "sale", "eyes"],
         ["bill", "idea", "lead", "lady"],
         ["know", "none", "once", "week"],
+        ["crab", "rare", "arts", "best"],
         ["what", "here", "area", "team"],
-        ["plus", "line", "unit", "sets"]
+        ["plus", "line", "unit", "sets"],
+        ["wife", "idea", "fees", "easy"],
+        ["thus", "hope", "upon", "send"]
+
 
     ];
     let startDate = new Date("04/03/2022");
@@ -1221,13 +1340,76 @@
         copydone();
     }
 
+    function fillHiddenAnswer(show) {
+        var answerhash = answer.join("").toUpperCase();
+        answerhash = answerhash.split("");
+        for (var i = 1; i <= answerhash.length; i++) {
+            var id = "cell_" + i;
+            var item = document.getElementById(id).firstElementChild;
+            if (show) {
+                item.classList.remove("hidden");
+                reveal("correct", document.getElementById(id));
+                // document.getElementById(id).classList.add("correct");
+            }
+            item.innerText = answerhash[i - 1];
+        }
+        if (show) {
+            document.getElementById("loading").style.display = "none";
+        }
+    }
+
+    function saveUserData(won, guess, attempts) {
+        var date = new Date();
+        var id = date.toDateString();
+        var gameData = {
+            won: won,
+            guesses: guess,
+            answer: answer.join("").toUpperCase(),
+            attempts: attempts,
+        }
+        localStorage.setItem(id, JSON.stringify(gameData));
+    }
+
+    function getUserData() {
+        var date = new Date();
+        var id = date.toDateString();
+        var gameData = JSON.parse(localStorage.getItem(id, gameData));
+        if (!gameData) {
+            fillHiddenAnswer(false);
+            document.getElementById("loading").style.display = "none";
+            return;
+        }
+        winner = gameData.won;
+        guesses = gameData.guesses;
+        attempts_left = attempts_left - attempts;
+        if (winner) {
+            setTimeout(function() {
+                fillHiddenAnswer(true);
+                renderGuesses();
+                gamewon();
+            }, 900);
+        }
+    }
+
+    function renderGuesses() {
+        guesses.forEach(word => {
+            addGuess(word, true);
+        })
+    }
+
     pickTodayAnswer();
+    getUserData();
+    // setTimeout(function() {
+    //     fillHiddenAnswer(true);
+    // }, 900);
+
+    var userData = null;
     // createShareResult();
-    gameinfo();
+    // gameinfo();
     // gameover();
     // gamewon();
     // copydone();
-    selectRows(1);
+    // selectRows(1);
 </script>
 
 </html>
