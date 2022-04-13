@@ -1121,6 +1121,9 @@
     }
 
     document.addEventListener('keydown', userKeyPress);
+    document.getElementById("input_box").addEventListener("mousedown", function(event) {
+        event.preventDefault();
+    });
 
     function userKeyPress(event) {
         if (event.keyCode == 13) {
@@ -1129,8 +1132,8 @@
         } else if (event.keyCode == 46 || event.keyCode == 8) {
             removeLetter();
         } else if (event.key.length == 1 && containsAnyLetter(event.key)) {
-            if (document.getElementById("input_box").selected == false)
-                addLetter(event.key);
+            addLetter(event.key);
+
         }
     }
 
