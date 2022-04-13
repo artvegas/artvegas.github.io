@@ -254,6 +254,17 @@
         color: darkgoldenrod;
     }
     
+    button[data-state='multi'] {
+        background-color: plum;
+        color: darkorchid;
+    }
+    
+    .cell.multi {
+        background-color: plum;
+        color: darkorchid;
+        border-color: darkorchid;
+    }
+    
     button[data-state='absent'] {
         background-color: darkgray;
         color: white;
@@ -693,6 +704,32 @@
                         <div class="row justify-content-md-left">
                             <div class="cell help col col-2">
                                 <div>
+                                    W
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell multi">
+                                <div>
+                                    E
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    A
+                                </div>
+                            </div>
+                            <div class="col help col-2 cell">
+                                <div>
+                                    R
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:left; font-size: 12px;">If a letter is purple in the keyboard, the letter appears multiple times.</div>
+                    <br/>
+                    <div class="container" style="position:relative;">
+                        <div class="row justify-content-md-left">
+                            <div class="cell help col col-2">
+                                <div>
                                     T
                                 </div>
                             </div>
@@ -1075,10 +1112,15 @@
         });
         cur_word.split("").forEach(letter => {
             var keyboard_key = document.querySelector('[data-key="' + letter.toLowerCase() + '"]');
-            // var multi = answerhash.toUpperCase.split('a').length - 1 > 1 ? true : false;
-            if (answerhash.toUpperCase().includes(letter)) {
-                if (keyboard_key.dataset.state != "correct")
-                    keyboard_key.dataset.state = "present";
+            var multi = answerhash.toUpperCase().split(letter.toUpperCase()).length - 1 > 1 ? true : false;
+            if (answerhash.toUpperCase().includes(letter.toUpperCase())) {
+                if (keyboard_key.dataset.state != "correct") {
+                    if (multi) {
+                        keyboard_key.dataset.state = "multi";
+                    } else {
+                        keyboard_key.dataset.state = "present";
+                    }
+                }
             } else {
                 if (keyboard_key.dataset.state != "correct")
                     keyboard_key.dataset.state = "absent";
