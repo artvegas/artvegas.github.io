@@ -630,8 +630,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="font-size:14px; font-weight:bold;">
                 <div class="modal-body">
-                    <span style="font-size:30px;">How to play</span><br/> Every day there is a new word square. You have <b>four</b> attempts to complete the word square.<br/><br/> Here is an example word square: <br/> T R A P<br/> R O M E<br/> A M E
-                    N
+                    <span style="font-size:30px;">How to play</span><br/> Every day there is a new word square. You have <b>30</b> attempts to complete the word square.<br/><br/> Here is an example word square: <br/> T R A P<br/> R O M E<br/> A M E N
                     <br/> P E N T<br/>
                     <br/>
                     <h5>Type in words to try and guess the word square.</h5>
@@ -1064,13 +1063,7 @@
                     won -= 1;
                     found = true;
                 }
-                if (cur_word.toUpperCase().includes(letter)) {
-                    if (keyboard_key.dataset.state != "correct")
-                        keyboard_key.dataset.state = "present";
-                } else {
-                    if (keyboard_key.dataset.state != "correct")
-                        keyboard_key.dataset.state = "absent";
-                }
+
                 // else {
                 //     reveal("normal", item);
                 //     // item.firstElementChild.innerText = "";
@@ -1080,6 +1073,17 @@
                 // }
             });
         });
+        cur_word.split("").forEach(letter => {
+            var keyboard_key = document.querySelector('[data-key="' + letter.toLowerCase() + '"]');
+            // var multi = answerhash.toUpperCase.split('a').length - 1 > 1 ? true : false;
+            if (answerhash.toUpperCase().includes(letter)) {
+                if (keyboard_key.dataset.state != "correct")
+                    keyboard_key.dataset.state = "present";
+            } else {
+                if (keyboard_key.dataset.state != "correct")
+                    keyboard_key.dataset.state = "absent";
+            }
+        })
         cur_correct += found;
         all_res.push(res);
         //createAttempt(res);
@@ -1197,7 +1201,7 @@
     }
 
     let winner = false;
-    let attempts_left = 10;
+    let attempts_left = 30;
     let cur_correct = 0;
     // let res = [
     //     [1, 0, 0, 2],
