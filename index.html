@@ -1065,6 +1065,9 @@
                 }
                 if (cur_word.toUpperCase().includes(letter)) {
                     if (keyboard_key.dataset.state != "correct")
+                        keyboard_key.dataset.state = "present";
+                } else {
+                    if (keyboard_key.dataset.state != "correct")
                         keyboard_key.dataset.state = "absent";
                 }
                 // else {
@@ -1208,14 +1211,14 @@
     let answer = [];
     wordSquares = [
         ["away", "were", "area", "year"],
-        ["base", "away", "sale", "eyes"],
-        ["bill", "idea", "lead", "lady"],
-        ["know", "none", "once", "week"],
+        ["atom", "tame", "omen", "mend"],
+        ["pair", "abbe", "ibis", "rest"],
+        ["bing", "icon", "nova", "gnat"],
         ["crab", "rare", "arts", "best"],
         ["plus", "line", "unit", "sets"],
         ["wife", "idea", "fees", "easy"],
         ["thus", "hope", "upon", "send"],
-        ["what", "here", "area", "team"],
+        ["shiv", "hare", "iris", "vest"],
 
 
     ];
