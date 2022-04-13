@@ -634,6 +634,7 @@
                     N
                     <br/> P E N T<br/>
                     <br/>
+                    <h5>Type in words to try and guess the word square.</h5>
 
                     <div class="container" style="position:relative;">
                         <div class="row justify-content-md-left">
@@ -687,7 +688,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="text-align:left; font-size: 12px;">If a letter is yellow, it's somewhere in the word square.</div>
+                    <div style="text-align:left; font-size: 12px;">If a letter is yellow in the keyboard, it's somewhere in the word square.</div>
                     <br/>
                     <div class="container" style="position:relative;">
                         <div class="row justify-content-md-left">
@@ -714,7 +715,7 @@
                         </div>
                     </div>
                     <div style="text-align:left; font-size: 12px;">
-                        If a letter is gray, it's not in the word square.
+                        If a letter is gray in the keyboard, it's not in the word square.
                     </div>
                     <br/>
                     <hr/>
@@ -1128,7 +1129,8 @@
         } else if (event.keyCode == 46 || event.keyCode == 8) {
             removeLetter();
         } else if (event.key.length == 1 && containsAnyLetter(event.key)) {
-            addLetter(event.key);
+            if (document.getElementById("input_box").selected == false)
+                addLetter(event.key);
         }
     }
 
@@ -1408,7 +1410,7 @@
 
     var userData = null;
     // createShareResult();
-    // gameinfo();
+    gameinfo();
     // gameover();
     // gamewon();
     // copydone();
